@@ -167,6 +167,18 @@ public:
     return false;
   }
 
+  float squaredMagnitude(){
+    float returnMe = 0;
+    for(int i = 0; i < 3; i++){
+      returnMe += components[i] * components[i];
+    }
+    return returnMe;
+  }
+
+  float magnitude(){
+    return sqrt(squaredMagnitude());
+  }
+
   friend std::ostream& operator<<(std::ostream& os, const Vec3f& V);
 
 
