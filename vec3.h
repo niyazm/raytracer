@@ -24,6 +24,12 @@ public:
     components[2] = _z;
   }
 
+  Vec3f(const Vec3f* V){
+    components[0] = V->components[0];
+    components[1] = V->components[1];
+    components[2] = V->components[2];
+  }
+
   float& operator[](unsigned int i)  {
     if(i > 2)
     {
@@ -179,6 +185,13 @@ public:
     return sqrt(squaredMagnitude());
   }
 
+  void normalize(){
+    //float length = magnitude();
+    float inv_length = 1/magnitude();
+    for(int i = 0; i < 3; i++){
+      components[i]*=inv_length;
+    }
+  }
   friend std::ostream& operator<<(std::ostream& os, const Vec3f& V);
 
 
