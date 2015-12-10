@@ -14,7 +14,7 @@ public:
 	Camera(Vec3f _e, Vec3f _look);
 	Camera(Vec3f _e, Vec3f _look, Vec3f _u);
 	ViewPlane vp;
-  virtual Ray generateRay(int x, int y);
+  virtual Ray generateRay(int x, int y) ;
 protected:
 	void compute_UVW();
 };

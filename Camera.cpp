@@ -46,6 +46,6 @@ Ray Camera::generateRay(int x, int y){
 	//double check this math with pictures
   Vec3f vpOrig = eye + W * (-vp.distance);
   Vec3f origin = vpOrig + adj;
-  Vec3f direction = -W; //orthographic camera!
-  return Ray(origin, direction);
+  Vec3f direction = W * -1; //orthographic camera!
+  return Ray(direction, origin);
 }

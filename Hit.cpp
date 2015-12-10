@@ -1,4 +1,5 @@
 #include "Hit.hpp"
+#include <string>
 
 Hit::Hit(){
   t = 10000.0f;
@@ -20,7 +21,13 @@ Hit::Hit(const Hit& h){
   mat = h.mat;
   view = h.view;
 }
-
+/*
+String Hit::print(){
+  string retstr = "";
+  retstr += to_string(t);
+  retstr += " ";
+  retstr += to_string(nr
+}*/
 /*Hit& Hit::operator=(Hit& h){
   t = h.t;
   normal = h.normal;

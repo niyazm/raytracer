@@ -14,6 +14,7 @@ public:
   Hit();
   Hit(double _t, Vec3f _n, Vec3f _r, Material* _m);
   Hit(const Hit& h);
+  //String print();
   //Hit& operator=(Hit& h);
 protected:
 };

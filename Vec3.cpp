@@ -48,23 +48,28 @@ Vec3f Vec3f::operator=(const Vec3f* rhs){
 }
 
 Vec3f Vec3f::operator+(const Vec3f& rhs){
-  return (*this) += rhs;
+  Vec3f retVal = (*this);
+  return retVal += rhs;
 }
 
 Vec3f Vec3f::operator-(){
-  return (*this) *= 1.0f;
+  Vec3f retVal = (*this);
+  return retVal *= 1.0f;
 }
 
 Vec3f Vec3f::operator-(const Vec3f& rhs){
-  return (*this) -= rhs;
+  Vec3f retVal = (*this);
+  return retVal -= rhs;
 }
 
 Vec3f Vec3f::operator*(const float& x){
-  return (*this) *= x;
+  Vec3f retVal = (*this);
+  return retVal *= x;
 }
 
 Vec3f Vec3f::operator*(const Vec3f& rhs){ //decided to use cross product since return types are the same for both multiplications
-  return (*this) *= rhs;
+  Vec3f retVal = (*this);
+  return retVal *= rhs;
 }
 
 /*float Vec3f::dot(const Vec3f& rhs){
@@ -76,39 +81,39 @@ Vec3f Vec3f::operator*(const Vec3f& rhs){ //decided to use cross product since r
 }*/
 
 float Vec3f::dot(Vec3f& rhs){
-  float returnMe = 0.0f;
+  float retVal = 0.0f;
   for(int i = 0; i < 3; i++){
-    returnMe += components[i] * rhs.components[i];
+    retVal += components[i] * rhs.components[i];
   }
-  return returnMe;
+  return retVal;
 }
 
 Vec3f Vec3f::operator/(const float& rhs){
   return (*this) /= rhs;
 }
 
-Vec3f Vec3f::operator+=(const Vec3f& rhs){
+Vec3f& Vec3f::operator+=(const Vec3f& rhs){
   for(int i = 0; i < 3; i++){
     (*this).components[i] += rhs.components[i];
   }
   return (*this);
 }
 
-Vec3f Vec3f::operator-=(const Vec3f& rhs){
+Vec3f& Vec3f::operator-=(const Vec3f& rhs){
   for(int i = 0; i < 3; i++){
     (*this).components[i] -= rhs.components[i];
   }
   return (*this);
 }
 
-Vec3f Vec3f::operator*=(const float& rhs){
+Vec3f& Vec3f::operator*=(const float& rhs){
   for(int i = 0; i < 3; i++){
     (*this).components[i] *= rhs;
   }
   return (*this);
 }
 
-Vec3f Vec3f::operator*=(const Vec3f& rhs){
+Vec3f& Vec3f::operator*=(const Vec3f& rhs){
   float i, j, k;
   i = components[1] * rhs.components[2] - components[2] * rhs.components[1];
   j = components[0] * rhs.components[2] - components[2] * rhs.components[0];
@@ -119,7 +124,7 @@ Vec3f Vec3f::operator*=(const Vec3f& rhs){
   return (*this);
 }
 
-Vec3f Vec3f::operator/=(const float& rhs){
+Vec3f& Vec3f::operator/=(const float& rhs){
   if(rhs == 0) throw ("Division by zero.");
   float recip = 1/rhs;
   for(int i = 0; i < 3; i++){
@@ -149,11 +154,7 @@ bool Vec3f::operator!=(const Vec3f& rhs){
 }
 
 float Vec3f::squaredMagnitude(){
-  float returnMe = 0;
-  for(int i = 0; i < 3; i++){
-    returnMe += components[i] * components[i];
-  }
-  return returnMe;
+  return (*this).dot(*this);
 }
 
 float Vec3f::magnitude(){

@@ -29,15 +29,15 @@ public:
   bool operator!=(const Vec3f& rhs);
 
   //Arithmetic assignment operators
-  Vec3f operator+=(const Vec3f& rhs);
+  Vec3f& operator+=(const Vec3f& rhs);
 
-  Vec3f operator-=(const Vec3f& rhs);
+  Vec3f& operator-=(const Vec3f& rhs);
 
-  Vec3f operator*=(const float& rhs);
+  Vec3f& operator*=(const float& rhs);
 
-  Vec3f operator*=(const Vec3f& rhs);
+  Vec3f& operator*=(const Vec3f& rhs);
 
-  Vec3f operator/=(const float& rhs);
+  Vec3f& operator/=(const float& rhs);
 
   //Basic Arithmetic operators
   Vec3f operator+(const Vec3f& rhs);

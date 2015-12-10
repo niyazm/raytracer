@@ -23,14 +23,15 @@ Magick::ColorRGB RGBCtoCRGB(RGBColor _c){
 
 void World::buildTest(){
   //insert a single sphere into scene
-  objects.add_object(new Sphere(Vec3f(0.0f, 0.0f, -1.0f), 1.0f));
+  objects.add_object(new Sphere(Vec3f(0.0f, 0.0f, 0.0f), 1.0005f));
   //insert a camera and viewplane
-  camera = Camera(Vec3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, -1.0f), Vec3f(0.0f, 1.0f, 0.0f));
-  camera.vp = ViewPlane(800, 600, .0033, .001);
+  camera = Camera(Vec3f(0.0f, 6.0f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f(1.0f, 0.0f, 0.0f));
+  camera.vp = ViewPlane(800, 600, .033, .001);
   //add a light
   lights.push_back(new DirLight(Vec3f(0.0f, 0.0f, -1.0f), RGBColor(1.0f)));
   //choose black as BG color
   background = RGBColor(); //black
+  std::cout << camera.U << camera.V << camera.W << std::endl;
 }
 
 void World::render(Magick::Image& o){
@@ -42,20 +43,23 @@ void World::render(Magick::Image& o){
   for(int r = 0; r < camera.vp.hres; r++){
     for(int c = 0; c < camera.vp.vres; c++){
       primaryRay = camera.generateRay(r, c);
-			hitrec = Hit();
+			//hitrec = Hit(10000.0f, Vec3f(), Vec3f(), NULL);
       hitrec = objects.hit(primaryRay);
-      if(hitrec.mat != NULL){
+      if(hitrec.t < 10000.0f ){
 				std::cout  << "HIT!" << std::endl;
-        outputColor = hitrec.mat->shade(hitrec.ray, hitrec.normal); //use normal and material to phong shade
+        outputColor = RGBColor(1,0,0);
+        //outputColor = hitrec.mat->shade(hitrec.ray, hitrec.normal); //use normal and material to phong shade
       } else {
+        background = RGBColor(primaryRay.d);
+        /*if(r == 0){
+          std::cout << primaryRay.d << background.r << "," << background.g << ", " << background.b << std::endl;
+        }*/
         outputColor = background;
       }
       OC = RGBCtoCRGB(outputColor); //clamps colors to [0,1] and returns a ColorRGB
-      //output.pixelColor(r, c, OC);//fill in arguments
       o.pixelColor(r, c, OC);//fill in arguments
     }
   }
-  //output.write("test.png"); //args go here
 }
 
 /*
