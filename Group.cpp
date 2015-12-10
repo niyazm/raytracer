@@ -1,20 +1,20 @@
 #include "Group.hpp"
 
 Group::Group(){
-  if(objects.size() != 0){
+  if(geomObjs.size() != 0){
     cleanUp();
   }
-  objects.resize(0);
+  geomObjs.resize(0);
 }
 
 void Group::add_object(GeomObj* newObj){
   //add a new obj pointer. dont forget to delete it!
-  objects.push_back(newObj);
+  geomObjs.push_back(newObj);
 }
 
 Hit Group::hit(const Ray& ray) {
     Hit retHit;
-    for (std::vector<GeomObj*>::iterator it = objects.begin(); it != objects.end(); it++)
+    for (std::vector<GeomObj*>::iterator it = geomObjs.begin(); it != geomObjs.end(); it++)
     {
       Hit currHit = (*it)->hit(ray);
       if (currHit.t < retHit.t) {
@@ -25,9 +25,9 @@ Hit Group::hit(const Ray& ray) {
 }
 
 void Group::cleanUp(){
-  for (std::vector<GeomObj*>::iterator it = objects.end(); it != objects.begin(); it--){
+  /*for (std::vector<GeomObj*>::iterator it = geomObjs.end(); it != geomObjs.begin(); it--){
     delete (*it);
-  }
+  }*/
 }
 
 Group::~Group(){

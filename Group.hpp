@@ -7,7 +7,7 @@
 class Group : public GeomObj{
 public:
   virtual Hit hit(const Ray& ray);
-  std::vector<GeomObj*> objects; //wnat to change to a map
+  std::vector<GeomObj*> geomObjs; //wnat to change to a map
   void add_object(GeomObj* newObj);
   ~Group();
   Group();

@@ -35,22 +35,24 @@ void World::buildTest(){
 
 void World::render(Magick::Image& o){
   RGBColor outputColor;
-  //Magick::ColorRGB OC; //output color in GraphicsMagick++'s object format
+  Magick::ColorRGB OC; //output color in GraphicsMagick++'s object format
   Hit hitrec;
   Ray primaryRay;
-  //Magick::Image output = Magick::Image(Magick::Geometry(800, 600), "white");
+  Magick::Image output = Magick::Image(Magick::Geometry(800, 600), "white");
   for(int r = 0; r < camera.vp.hres; r++){
     for(int c = 0; c < camera.vp.vres; c++){
       primaryRay = camera.generateRay(r, c);
+			hitrec = Hit();
       hitrec = objects.hit(primaryRay);
       if(hitrec.mat != NULL){
+				std::cout  << "HIT!" << std::endl;
         outputColor = hitrec.mat->shade(hitrec.ray, hitrec.normal); //use normal and material to phong shade
       } else {
         outputColor = background;
       }
-      //OC = RGBCtoCRGB(outputColor); //clamps colors to [0,1] and returns a ColorRGB
-     // output.pixelColor(r, c, OC);//fill in arguments
-     // o.pixelColor(r, c, OC);//fill in arguments
+      OC = RGBCtoCRGB(outputColor); //clamps colors to [0,1] and returns a ColorRGB
+      //output.pixelColor(r, c, OC);//fill in arguments
+      o.pixelColor(r, c, OC);//fill in arguments
     }
   }
   //output.write("test.png"); //args go here
