@@ -1,4 +1,25 @@
 #include "World.hpp"
+#include <Magick++.h>
+
+
+float clamp(float x, float min, float max){
+  x = x > max ? max : x;
+  x = x < min ? min : x;
+  return x;
+}
+
+float colorClamp(float x){
+  return clamp(x, 0, 1);
+}
+
+RGBColor minMaxClamp(RGBColor _c){
+  return RGBColor(colorClamp(_c.r), colorClamp(_c.g), colorClamp(_c.b));  
+}
+
+Magick::ColorRGB RGBCtoCRGB(RGBColor _c){
+  _c = minMaxClamp(_c);
+  return Magick::ColorRGB(_c.r, _c.g, _c.b);
+}
 
 void World::buildTest(){
   //insert a single sphere into scene
@@ -12,12 +33,12 @@ void World::buildTest(){
   background = RGBColor(); //black
 }
 
-void World::Render(){
+void World::render(Magick::Image& o){
   RGBColor outputColor;
-  Magick::ColorRGB OC; //output color in GraphicsMagick++'s object format
+  //Magick::ColorRGB OC; //output color in GraphicsMagick++'s object format
   Hit hitrec;
   Ray primaryRay;
-  Magick::Image output = Magick::Image(Magick::Geometry(camera.vp.hres, camera.vp.vres));
+  //Magick::Image output = Magick::Image(Magick::Geometry(800, 600), "white");
   for(int r = 0; r < camera.vp.hres; r++){
     for(int c = 0; c < camera.vp.vres; c++){
       primaryRay = camera.generateRay(r, c);
@@ -27,11 +48,12 @@ void World::Render(){
       } else {
         outputColor = background;
       }
-      OC = RGBCtoCRGB(outputColor); //clamps colors to [0,1] and returns a ColorRGB
-      output.pixelColor(r, c, OC);//fill in arguments
+      //OC = RGBCtoCRGB(outputColor); //clamps colors to [0,1] and returns a ColorRGB
+     // output.pixelColor(r, c, OC);//fill in arguments
+     // o.pixelColor(r, c, OC);//fill in arguments
     }
   }
-  output.write("test.png"); //args go here
+  //output.write("test.png"); //args go here
 }
 
 /*

@@ -1,3 +1,4 @@
+#include "Hit.hpp"
 
 Hit::Hit(){
   t = 10000.0f;

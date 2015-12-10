@@ -1,3 +1,6 @@
+#ifndef __WORLD__
+#define __WORLD__
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -27,7 +30,7 @@ public:
   std::vector<Material*> materials;
   std::vector<Light*> lights;
   RGBColor background; 
-  void Render();
+  void render(Magick::Image& o);
   void buildTest();
 private:
   //1string m_next_token;
@@ -36,21 +39,4 @@ private:
   //string peekat_token();
 };
 
-float clamp(float x, float min, float max){
-  x = x > max ? max : x;
-  x = x < min ? min : x;
-  return x;
-}
-
-float colorClamp(float x){
-  return clamp(x, 0, 1);
-}
-
-RGBColor minMaxClamp(RGBColor _c){
-  return RGBColor(colorClamp(_c.r), colorClamp(_c.g), colorClamp(_c.b));  
-}
-
-Magick::ColorRGB RGBCtoCRGB(RGBColor _c){
-  _c = minMaxClamp(_c);
-  return Magick::ColorRGB(_c.r, _c.g, _c.b);
-}
+#endif

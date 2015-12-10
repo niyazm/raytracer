@@ -32,12 +32,18 @@ Hit Sphere::hit(const Ray& ray){
   t = (-b - e) / denominator;
   if (t > .0001){
     Vec3f norm = (temp + (d * t)) / radius;
-    return Hit(t, norm, mat);
+		Vec3f view = d;
+		view.normalize();
+		view *= -1;
+    return Hit(t, norm, view, mat);
   }
   t = (-b + e) / denominator;
   if (t > .0001){
     Vec3f norm = (temp + (d * t)) / radius;
-    return Hit(t, norm, mat);
+		Vec3f view = d;
+		view.normalize();
+		view *= -1;
+    return Hit(t, norm, view, mat);
   }
   return Hit();
 }

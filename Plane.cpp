@@ -16,9 +16,12 @@ Plane::Plane(){
 Hit Plane::hit(const Ray& ray) {
   Vec3f o = ray.o;
   Vec3f d = ray.d;
+	Vec3f view = d;
+	view.normalize();
+	view *= -1;
   double t = (point - o).dot(normal) / (d.dot(normal));
   if (t > .0001){
-    return Hit(t, normal, mat);
+    return Hit(t, normal, view, mat);
   }
   return Hit();
 }
