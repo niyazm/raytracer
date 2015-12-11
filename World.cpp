@@ -25,8 +25,8 @@ void World::buildTest(){
   //insert a single sphere into scene
   objects.add_object(new Sphere(Vec3f(0.0f, 0.0f, 0.0f), 1.0005f));
   //insert a camera and viewplane
-  camera = Camera(Vec3f(0.0f, 6.0f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f(1.0f, 0.0f, 0.0f));
-  camera.vp = ViewPlane(800, 600, .033, .001);
+  camera = Camera(Vec3f(0.0f, 6.0f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 1.0f));
+  camera.vp = ViewPlane(1800, 1800, .0081633, .001);
   //add a light
   lights.push_back(new DirLight(Vec3f(0.0f, 0.0f, -1.0f), RGBColor(1.0f)));
   //choose black as BG color
@@ -39,25 +39,36 @@ void World::render(Magick::Image& o){
   Magick::ColorRGB OC; //output color in GraphicsMagick++'s object format
   Hit hitrec;
   Ray primaryRay;
-  Magick::Image output = Magick::Image(Magick::Geometry(800, 600), "white");
-  for(int r = 0; r < camera.vp.hres; r++){
-    for(int c = 0; c < camera.vp.vres; c++){
+  //Magick::Image output = Magick::Image(Magick::Geometry(camera.vp.hres, camera.vp.vres), "white");
+  float tmax = 0.0f;
+  float tmin = 10000.0f;
+  for(int r = 0; r < o.rows(); r++){
+    for(int c = 0; c < o.columns(); c++){
       primaryRay = camera.generateRay(r, c);
-			//hitrec = Hit(10000.0f, Vec3f(), Vec3f(), NULL);
       hitrec = objects.hit(primaryRay);
       if(hitrec.t < 10000.0f ){
-				std::cout  << "HIT!" << std::endl;
-        outputColor = RGBColor(1,0,0);
+        if (hitrec.t > tmax) tmax = hitrec.t;
+        if (hitrec.t < tmin) tmin = hitrec.t;
+      }
+    }
+  }
+  for(int r = 0; r < o.rows(); r++){
+    for(int c = 0; c < o.columns(); c++){
+      primaryRay = camera.generateRay(r, c);
+      hitrec = objects.hit(primaryRay);
+      if(hitrec.t < 10000.0f ){
+				//std::cout  << "HIT!" << std::endl;
+        float tcol = (tmax - hitrec.t)/tmax;
+        outputColor = RGBColor(tcol,tcol,tcol);
         //outputColor = hitrec.mat->shade(hitrec.ray, hitrec.normal); //use normal and material to phong shade
       } else {
+        std::cout << primaryRay.d << std::endl;
         background = RGBColor(primaryRay.d);
-        /*if(r == 0){
-          std::cout << primaryRay.d << background.r << "," << background.g << ", " << background.b << std::endl;
-        }*/
         outputColor = background;
       }
       OC = RGBCtoCRGB(outputColor); //clamps colors to [0,1] and returns a ColorRGB
-      o.pixelColor(r, c, OC);//fill in arguments
+      o.pixelColor(c, r, OC);//fill in arguments
+      if(r == 1799 && c == 599) std::cout << "made it!" << std::endl;
     }
   }
 }

@@ -15,7 +15,7 @@ ViewPlane::ViewPlane(int h, int v, float s){
 }
 
 ViewPlane::ViewPlane(int h, int v){
-  ViewPlane(h, v, .0033);
+  ViewPlane(h, v, .033);
 }
 
 ViewPlane::ViewPlane(){

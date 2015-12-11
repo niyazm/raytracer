@@ -4,8 +4,8 @@ int main(int argc, char **argv){
   World raytracer;
   raytracer.buildTest();
   Magick::InitializeMagick(*argv);
-	std::cout << "do i get here?" << std::endl;
-	Magick::Image output = Magick::Image(Magick::Geometry(800, 600), "white");
+	Magick::Image output = Magick::Image(Magick::Geometry(raytracer.camera.vp.hres, raytracer.camera.vp.vres), "white");
+  std::cout << output.columns() << "," << output.rows() << std::endl; 
   raytracer.render(output);
 	output.write("test.png");
   return 0;
