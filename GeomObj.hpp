@@ -9,6 +9,7 @@
 class GeomObj{
 public:
   virtual Hit hit(const Ray& ray) = 0;
+  virtual void report() = 0;
   Material* mat;
 protected:
 };

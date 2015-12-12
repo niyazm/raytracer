@@ -3,12 +3,14 @@
 
 #include "GeomObj.hpp"
 #include "Hit.hpp"
+#include <iostream>
 
 class Sphere : public GeomObj{
 public:
   Vec3f center;
   float radius;
   virtual Hit hit(const Ray& ray); 
+  virtual void report();
   Sphere();
   Sphere(Vec3f _c, float _r);
   Sphere(Vec3f _c);

@@ -24,6 +24,14 @@ Hit Group::hit(const Ray& ray) {
     return retHit;
 }
 
+void Group::report() {
+    Hit retHit;
+    for (std::vector<GeomObj*>::iterator it = geomObjs.begin(); it != geomObjs.end(); it++)
+    {
+      (*it)->report();
+    }
+}
+
 void Group::cleanUp(){
   /*for (std::vector<GeomObj*>::iterator it = geomObjs.end(); it != geomObjs.begin(); it--){
     delete (*it);

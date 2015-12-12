@@ -1,4 +1,5 @@
 #include "Camera.hpp"
+#include <iostream>
 
 Camera::Camera(Vec3f _e, Vec3f _look, Vec3f _u){
   eye = _e;
@@ -38,6 +39,18 @@ void Camera::compute_UVW(){
 }
 
 Ray Camera::generateRay(int x, int y){
+  bool DEBUG = false;
+  Vec3f vpx = U;
+  Vec3f vpy = V;
+  float uAdjustment = vp.pixelSize * ( x - vp.hres/2 + .5 );
+  float vAdjustment = vp.pixelSize * ( y - vp.vres/2 + .5 );
+  vpx *= uAdjustment;
+  vpy *= vAdjustment;
+  Vec3f vpz = W;
+  vpz *= vp.distance;
+  Vec3f vpLoc = vpx + vpy + vpz;
+  Vec3f origin = vpLoc - eye;
+  /*
   Vec3f adj = Vec3f(-vp.hres, -vp.vres, 0.0f)/2;
   Vec3f loc = Vec3f(x, y, 0);
   adj += loc;
@@ -46,6 +59,11 @@ Ray Camera::generateRay(int x, int y){
 	//double check this math with pictures
   Vec3f vpOrig = eye + W * (-vp.distance);
   Vec3f origin = vpOrig + adj;
+  */
   Vec3f direction = W * -1; //orthographic camera!
+  if (DEBUG) {
+    std::cout << "DIR: " << direction << " ";
+    std::cout << "ORG: " << origin << std::endl;
+  }
   return Ray(direction, origin);
 }

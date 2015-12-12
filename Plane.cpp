@@ -13,6 +13,12 @@ Plane::Plane(){
   Plane(Vec3f(1.0f, 0.0f, 0.0f));
 }
 
+void Plane::report(){
+  std::cout << "NORMAL : " << normal;
+  std::cout << " POINT : " << point;
+  std::cout << std::endl;
+}
+
 Hit Plane::hit(const Ray& ray) {
   Vec3f o = ray.o;
   Vec3f d = ray.d;
