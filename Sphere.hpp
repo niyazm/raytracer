@@ -12,6 +12,7 @@ public:
   virtual Hit hit(const Ray& ray); 
   virtual void report();
   Sphere();
+  Sphere(Vec3f _c, float _r, Material* _m);
   Sphere(Vec3f _c, float _r);
   Sphere(Vec3f _c);
 protected:

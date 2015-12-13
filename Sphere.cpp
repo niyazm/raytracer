@@ -10,6 +10,12 @@ Sphere::Sphere(Vec3f _c, float _r){
   radius = _r;
 }
 
+Sphere::Sphere(Vec3f _c, float _r, Material* _m){
+  center = _c;
+  radius = _r;
+  mat = _m;
+}
+
 Sphere::Sphere(Vec3f _c){
   Sphere(_c, 1.0f);
 }
@@ -49,8 +55,9 @@ Hit Sphere::hit(const Ray& ray){
     Vec3f norm  = (tm + (d * t));
     Vec3f view = d;
     view.normalize();
-    view*=-1;
-    return Hit(t, norm, view, mat);
+    view*=-1; 
+    Vec3f p = o + d * t;
+    return Hit(t, p, norm, view, mat);
   }
   return Hit();
 }

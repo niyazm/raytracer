@@ -26,16 +26,23 @@ void World::buildTest(){
   /*objects.add_object(new Sphere(Vec3f(0.0f, 0.0f, 0.0f), 1));
   objects.add_object(new Sphere(Vec3f(1.0f, 1.0f, 0.0f), 1));
   objects.add_object(new Sphere(Vec3f(2.0f, 2.0f, 1.50f), 1));*/
-  for(int i = 0; i < 1; i ++){
-    objects.add_object(new Sphere(Vec3f(i, i, i), 10));
-  }
-  //objects.add_object(new Plane(Vec3f(1.0f, 0.0f, 1.0f), Vec3f(0,0,0)));
-  objects.report();
   //insert a camera and viewplane
   camera = Camera(Vec3f(30.0f, 0.0f, 0.0f), Vec3f(0.0f, 0.0f, 0.0f), Vec3f(0.0f, 1.0f, 0.0f));
   camera.vp = ViewPlane(1000, 600, .033, .001);
   //add a light
+  ambient = Light(RGBColor(.1,.1,.1), RGBColor(.1,.1,.1), RGBColor(.1,.1,.1));
   lights.push_back(new DirLight(Vec3f(0.0f, 0.0f, -1.0f), RGBColor(1.0f)));
+  //add a material
+  materials.push_back(new Material(RGBColor(1, .000010, .000010)));
+  //add some objects
+  for(int i = 0; i < 10; i ++){
+    objects.add_object(new Sphere(Vec3f(i, i, i), .75, materials[0]));
+  }
+  //objects.add_object(new Plane(Vec3f(1, 0, 1), Vec3f(15, 0, 0), materials[0]));
+  //objects.add_object(new Plane(Vec3f(1, 1, 0), Vec3f(15, 0, 0), materials[0]));
+  //objects.add_object(new Plane(Vec3f(1, -1, 0), Vec3f(15, 0, 0), materials[0]));
+  //objects.add_object(new Plane(Vec3f(1, 0, -1), Vec3f(15, 0, 0), materials[0]));
+  objects.report();
   //choose black as BG color
   background = RGBColor(); //black
   std::cout << camera.eye << camera.lookAt << std::endl;
@@ -50,13 +57,23 @@ void World::render(Magick::Image& o){
   //Magick::Image output = Magick::Image(Magick::Geometry(camera.vp.hres, camera.vp.vres), "white");
   float tmax = 0.0f;
   float tmin = 10000.0f;
+  RGBColor cmax = RGBColor(0, 0, 0);
+  RGBColor cmin = RGBColor(1, 1, 1);
+  DirLight L = DirLight(Vec3f(0, -1, 0), RGBColor(Vec3f(1,0,0)));
   for(int r = 0; r < o.rows(); r++){
     for(int c = 0; c < o.columns(); c++){
       primaryRay = camera.generateRay(c, r);
       hitrec = objects.hit(primaryRay);
       if(hitrec.t < 10000.0f ){
+        outputColor = hitrec.mat->shade(hitrec.normal, hitrec.view, ambient, L); //use normal and material to phong shade
         if (hitrec.t > tmax) tmax = hitrec.t;
         if (hitrec.t < tmin) tmin = hitrec.t;
+        if (outputColor.r > cmax.r) cmax.r = outputColor.r;
+        if (outputColor.g > cmax.g) cmax.g = outputColor.g;
+        if (outputColor.b > cmax.b) cmax.b = outputColor.b;
+        if (outputColor.r < cmin.r) cmin.r = outputColor.r;
+        if (outputColor.g < cmin.g) cmin.g = outputColor.g;
+        if (outputColor.b < cmin.b) cmin.b = outputColor.b;
       }
     }
   }
@@ -64,17 +81,21 @@ void World::render(Magick::Image& o){
     for(int c = 0; c < o.columns(); c++){
       primaryRay = camera.generateRay(r, c);
       hitrec = objects.hit(primaryRay);
-      std::cout << primaryRay.d << primaryRay.o << " " << c << ", " << r << " " << " " << hitrec.t << std::endl;
+      //std::cout << primaryRay.d << primaryRay.o << " " << c << ", " << r << " " << " " << hitrec.t << std::endl;
       //if(hitrec.t < 10000.0f ) std::cout << " HIT!";
       //std::cout << std::endl;
       if(hitrec.t < 10000.0f ){
 				//std::cout  << "HIT!" << std::endl;
         float tcol = 1-(hitrec.t - tmin)/(tmax - tmin);
         outputColor = RGBColor(tcol,tcol,tcol);
-        //outputColor = hitrec.mat->shade(hitrec.ray, hitrec.normal); //use normal and material to phong shade
+        std::cout << "Shading..." << std::endl;
+        std::cout << "hr" << std::endl << "\t\t" << hitrec.normal << hitrec.view << std::endl;
+        outputColor = hitrec.mat->shade(hitrec.normal, hitrec.view, ambient, L); //use normal and material to phong shade
+        outputColor.r = (outputColor.r - cmin.r)/(cmax.r - cmin.r);
+        //outputColor.g = (outputColor.g - cmin.g)/(cmax.g - cmin.g);
+        //outputColor.b = (outputColor.b - cmin.b)/(cmax.b - cmin.b);
+        std::cout << "done shading this pixel" << outputColor.r << " " << outputColor.g << " " << outputColor.b << std::endl;
       } else {
-        //std::cout << primaryRay.d << std::endl;
-        //background = RGBColor(primaryRay.d);
         outputColor = background;
       }
       if(camera.vp.row(r) == 0 || camera.vp.col(c) == 0)outputColor = RGBColor(1,0,0);

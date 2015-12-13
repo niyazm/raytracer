@@ -6,9 +6,12 @@
 
 class Light{
 public:
-  RGBColor color;
+  RGBColor colorA;
+  RGBColor colorD;
+  RGBColor colorS;
   Light();
   Light(RGBColor c);
+  Light(RGBColor a, RGBColor d, RGBColor s);
 protected:
 };
 

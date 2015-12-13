@@ -30,6 +30,7 @@ public:
   std::vector<Material*> materials;
   std::vector<Light*> lights;
   RGBColor background; 
+  Light ambient;
   void render(Magick::Image& o);
   void buildTest();
 private:

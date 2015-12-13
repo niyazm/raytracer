@@ -14,6 +14,7 @@ public:
   Plane();
   Plane(Vec3f _n);
   Plane(Vec3f _n, Vec3f _p);
+  Plane(Vec3f _n, Vec3f _p, Material* _m);
 protected:
 };
 
