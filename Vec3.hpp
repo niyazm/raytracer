@@ -65,7 +65,7 @@ public:
 
   friend std::ostream& operator<<(std::ostream& os, const Vec3f& V);
 
-protected:
+public:
   float components[3];
 };
 

@@ -30,26 +30,46 @@ Camera::Camera(){
 }
 
 void Camera::compute_UVW(){
-  W = eye - lookAt; //pointing in wrong direction??
-	//W = lookAt - eye;
+  //W = eye - lookAt; //pointing in wrong direction??
+	W = lookAt - eye;
   W.normalize();
-  U = up * W;
+  V = W * up;
+  V.normalize();
+  U = V * W;
   U.normalize();
-  V = W * U;
 }
 
 Ray Camera::generateRay(int x, int y){
   bool DEBUG = false;
   Vec3f vpx = U;
   Vec3f vpy = V;
-  float uAdjustment = vp.pixelSize * ( x - vp.hres/2 + .5 );
-  float vAdjustment = vp.pixelSize * ( y - vp.vres/2 + .5 );
+  if(x == 510 && y == 300){
+    std::cout << vpx << vpy << std::endl;
+    std::cout << "Dim: " << vp.hres << " " << vp.vres << std::endl;
+  }
+  float uAdjustment = vp.pixelSize * ( x - (vp.vres)*.5);
+  float vAdjustment = vp.pixelSize * ( y - (vp.hres)*.5);
+  if(x == 510 && y == 300){
+    std::cout << "Adjustments in U and V:" << uAdjustment << " " << vAdjustment << std::endl;
+  }
   vpx *= uAdjustment;
   vpy *= vAdjustment;
   Vec3f vpz = W;
   vpz *= vp.distance;
-  Vec3f vpLoc = vpx + vpy + vpz;
-  Vec3f origin = vpLoc - eye;
+  if(x == 510 && y ==300){
+    std::cout << "vp distance: " << vpz << vp.distance << std::endl;
+  }
+  Vec3f vpLoc = Vec3f(0,0,0);
+  //Vec3f offset = Vec3f(0, 7, -7);
+  vpLoc += vpx + vpy + vpz /*+ offset*/;
+  if(x == 510 && y == 300){
+    std::cout << "net adjustments" << vpx << vpy << vpz << std::endl;
+  }
+  Vec3f origin = vpLoc + eye;
+  if(x ==510 && y ==300){
+    std::cout << origin << "=" << vpLoc << "-" << eye << std::endl;
+    std::cout << W << std::endl;
+  }
   /*
   Vec3f adj = Vec3f(-vp.hres, -vp.vres, 0.0f)/2;
   Vec3f loc = Vec3f(x, y, 0);
@@ -60,7 +80,7 @@ Ray Camera::generateRay(int x, int y){
   Vec3f vpOrig = eye + W * (-vp.distance);
   Vec3f origin = vpOrig + adj;
   */
-  Vec3f direction = W * -1; //orthographic camera!
+  Vec3f direction = W; //orthographic camera!
   if (DEBUG) {
     std::cout << "DIR: " << direction << " ";
     std::cout << "ORG: " << origin << std::endl;

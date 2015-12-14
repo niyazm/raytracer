@@ -10,7 +10,7 @@ Sphere::Sphere(Vec3f _c, float _r){
   radius = _r;
 }
 
-Sphere::Sphere(Vec3f _c, float _r, Material* _m){
+Sphere::Sphere(Vec3f _c, float _r, int _m){
   center = _c;
   radius = _r;
   mat = _m;
@@ -30,16 +30,18 @@ Hit Sphere::hit(const Ray& ray){
   Vec3f o, d;
   o = ray.o;
   d = ray.d;
+  d.normalize();
   double a, b, c;
   Vec3f tm = o - center;
-  tm = center - o;
+  //tm = center - o;
   a = d.squaredMagnitude();
   b = 2 * (d.dot(tm));
   c = (o - center).squaredMagnitude() - (radius * radius);
   double discriminant = b * b - 4.0 * a * c;
-  if (discriminant < 0.0) return Hit();
+  if (discriminant < 0.0) return Hit(); //return empty hit (or a miss)
   double e = sqrt(discriminant);
   double t = -b - e;
+  t *= .5;
   /*if(discriminant >= 0.0){
     std::cout << this << std::endl << "\t" 
     << "Origin" << o << std::endl << "\t"

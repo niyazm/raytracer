@@ -5,11 +5,11 @@ Hit::Hit(){
   t = 10000.0f;
   point = Vec3f();
   normal = Vec3f();
-  mat = NULL;
+  mat = 0;
   view = Vec3f();
 }
 
-Hit::Hit(double _t, Vec3f _p, Vec3f _n, Vec3f _r, Material* _m){
+Hit::Hit(double _t, Vec3f _p, Vec3f _n, Vec3f _r, int _m){
   t = _t;
   point = _p;
   normal = _n;
